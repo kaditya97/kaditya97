@@ -6,6 +6,7 @@
 - 👯 I’m looking to collaborate on **any open source projects**
 - 💬 Ask me about **Web-GIS, Web-Mapping, Remote Sensing, Flutter and Web-Development**
 - 📫 How to reach me: Website: [kaditya97](https://kaditya97.com.np),twitter: [@kaditya97](https://twitter.com/kaditya97)
+<a href="https://github.com/kaditya97">[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=kaditya97&layout=compact)](https://github.com/kaditya97)</a>
 <img src="https://github-readme-stats.vercel.app/api?username=kaditya97&&show_icons=true" />
 
 <!--
