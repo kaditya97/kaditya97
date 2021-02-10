@@ -1,8 +1,8 @@
 ### Hi, I'm Aditya Kushwaha! 
 
 
-- 🔭 I’m currently working on React Project
-- 🌱 I’m currently learning [React](https://reactjs.org/), [Django](https://www.djangoproject.com/)
+- 🔭 I’m currently working on **Django Project**
+- 🌱 I’m currently learning **Machine Learning**
 - 👯 I’m looking to collaborate on **any open source projects**
 - 💬 Ask me about **Web-GIS, Web-Mapping, Remote Sensing, Flutter and Web-Development**
 - 📫 How to reach me: Website: [kaditya97](https://kaditya97.com.np),twitter: [@kaditya97](https://twitter.com/kaditya97)<br /><br />
