@@ -1,7 +1,7 @@
 ### Hi, I'm Aditya Kushwaha! 
 
 
-- 🔭 I’m currently working on **Django Project**
+- 🔭 I’m currently working on **Django && React Project**
 - 🌱 I’m currently learning **Machine Learning**
 - 👯 I’m looking to collaborate on **any open source projects**
 - 💬 Ask me about **Web-GIS, Web-Mapping, Remote Sensing, Flutter and Web-Development**
