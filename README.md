@@ -4,7 +4,7 @@
 - 🔭 I’m currently working as **Web GIS Developer** at [**Naxa**](https://naxa.com.np/)
 - 👯 I will be happy to collaborate on **any open source projects**
 - 💬 Ask me about **Web-GIS, Web-Mapping, Remote Sensing and Web-Development**
-- 📫 How to reach me: Website: [kaditya97](https://kaditya97.com.np), twitter: [@kaditya97](https://twitter.com/kaditya97)<br /><br />
+- 📫 How to reach me: Website: [kaditya97](https://kaditya97.com.np), Twitter: [@kaditya97](https://twitter.com/kaditya97)<br /><br />
 
 <b>🔥 Github Streaks</b>
 <p align="center"><img src="https://github-readme-streak-stats.herokuapp.com/?user=kaditya97&theme=black-ice&hide_border=true&stroke=0000&background=0D1117&ring=e05397&fire=e05397&currStreakLabel=e05397&bg_color=30,e96443,904e95&title_color=fff&text_color=fff" alt="m0rp43us" /></p>
