@@ -1,4 +1,4 @@
-## Hi, I'm Aditya Kushwaha! 
+## Hi, I'm Aditya Kushwaha
 
 
 - 🔭 I’m currently working as **Web GIS Developer** at [**Naxa**](https://naxa.com.np/)
