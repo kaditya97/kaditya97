@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech Radar</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      @keyframes scan {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes pulse-ring {
+        0% {
+          transform: translate(-50%, -50%) scale(0.3);
+          opacity: 0.8;
+          border-width: 3px;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 0;
+          border-width: 1px;
+        }
+      }
+
+      @keyframes blip-glow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 4px currentColor);
+        }
+        50% {
+          filter: drop-shadow(0 0 12px currentColor);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .radar-container {
+        position: relative;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 50, 30, 0.3) 0%,
+          rgba(0, 20, 10, 0.8) 100%
+        );
+        border-radius: 50%;
+        overflow: hidden;
+      }
+
+      .radar-center {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: #00ff88;
+        border-radius: 50%;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 20px #00ff88, 0 0 40px #00ff8855;
+        z-index: 5;
+      }
+
+      .scanner {
+        position: absolute;
+        width: 50%;
+        height: 4px;
+        left: 50%;
+        top: 50%;
+        transform-origin: left center;
+        animation: scan 4s linear infinite;
+        z-index: 4;
+      }
+
+      .scanner::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 300px;
+        left: 0;
+        top: -150px;
+
+        /* Light falloff */
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 255, 136, 0.2),
+          rgba(0, 255, 136, 0.05),
+          transparent
+        );
+
+        /* Cone shape */
+        clip-path: polygon(
+          0 50%,
+          /* tip */ 100% 0,
+          /* top far edge */ 100% 100% /* bottom far edge */
+        );
+
+        transform-origin: left center;
+        pointer-events: none;
+      }
+
+      .pulse-ring {
+        position: absolute;
+        border: 2px solid rgba(0, 255, 136, 0.6);
+        border-radius: 50%;
+        left: 50%;
+        top: 50%;
+        width: 580px;
+        height: 580px;
+        transform: translate(-50%, -50%) scale(0.3);
+        animation: pulse-ring 3s ease-out infinite;
+        pointer-events: none;
+      }
+
+      .pulse-ring:nth-child(2) {
+        animation-delay: 1s;
+      }
+
+      .pulse-ring:nth-child(3) {
+        animation-delay: 2s;
+      }
+
+      .tech-blip {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        border-radius: 50%;
+        background: rgba(0, 20, 10, 0.8);
+        border: 1px solid rgba(0, 255, 136, 0.3);
+      }
+
+      .tech-blip:hover {
+        transform: scale(1.3);
+        z-index: 20;
+        border-color: rgba(0, 255, 136, 0.8);
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+      }
+
+      .tech-blip.active {
+        animation: blip-glow 1.5s ease-in-out infinite;
+        border-color: #00ff88;
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+      }
+
+      .tech-blip::after {
+        content: attr(data-name);
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: 10px;
+        color: #00ff88;
+        opacity: 0;
+        transition: opacity 0.3s;
+        padding-top: 6px;
+        font-family: system-ui, sans-serif;
+      }
+
+      .tech-blip:hover::after {
+        opacity: 1;
+      }
+
+      .detail-panel {
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      .grid-line {
+        position: absolute;
+        background: rgba(0, 255, 136, 0.08);
+        left: 50%;
+        top: 50%;
+      }
+
+      .auto-indicator {
+        transition: opacity 0.3s;
+      }
+
+      .auto-indicator.paused {
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-950 min-h-screen text-white overflow-x-hidden">
+    <div class="container mx-auto px-4 py-8">
+      <header class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-emerald-400 mb-2">
+          Technology Radar
+        </h1>
+        <p class="text-gray-400">Click on any technology to view details</p>
+      </header>
+
+      <div
+        class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8"
+      >
+        <!-- Radar -->
+        <div class="radar-container flex-shrink-0" id="radar">
+          <!-- Pulse Rings -->
+          <div class="pulse-ring"></div>
+          <div class="pulse-ring"></div>
+          <div class="pulse-ring"></div>
+
+          <!-- Subtle Grid Lines -->
+          <div
+            class="grid-line"
+            style="width: 580px; height: 1px; transform: translate(-50%, -50%)"
+          ></div>
+          <div
+            class="grid-line"
+            style="width: 1px; height: 580px; transform: translate(-50%, -50%)"
+          ></div>
+          <div
+            class="grid-line"
+            style="
+              width: 410px;
+              height: 1px;
+              transform: translate(-50%, -50%) rotate(45deg);
+            "
+          ></div>
+          <div
+            class="grid-line"
+            style="
+              width: 410px;
+              height: 1px;
+              transform: translate(-50%, -50%) rotate(-45deg);
+            "
+          ></div>
+
+          <!-- Center Dot -->
+          <div class="radar-center"></div>
+
+          <!-- Scanner -->
+          <div class="scanner"></div>
+
+          <!-- Tech blips will be inserted here by JS -->
+        </div>
+
+        <!-- Detail Panel -->
+        <div class="w-full lg:w-96">
+          <!-- Auto-rotate indicator -->
+          <div
+            id="auto-indicator"
+            class="auto-indicator flex items-center justify-between mb-3 px-3 py-2 bg-gray-900/60 rounded-lg border border-emerald-500/20"
+          >
+            <div class="flex items-center gap-2 text-sm text-gray-400">
+              <span class="relative flex h-2 w-2">
+                <span
+                  id="pulse-dot"
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"
+                ></span>
+              </span>
+              <span id="auto-status">Auto-rotating</span>
+            </div>
+            <button
+              id="toggle-auto"
+              class="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+            >
+              Pause
+            </button>
+          </div>
+
+          <div
+            id="detail-panel"
+            class="bg-gray-900/80 backdrop-blur border border-emerald-500/30 rounded-xl p-6 min-h-[400px]"
+          >
+            <div class="text-center text-gray-500 py-16">
+              <svg
+                class="w-16 h-16 mx-auto mb-4 opacity-50"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              <p>Select a technology to view details</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Technology data with icons
+      const technologies = [
+        // Adopt Ring
+        {
+          id: 1,
+          name: "TypeScript",
+          ring: "adopt",
+          icon: "📘",
+          angle: 30,
+          description:
+            "A typed superset of JavaScript that compiles to plain JavaScript.",
+          pros: ["Strong typing", "Better IDE support", "Catches errors early"],
+          cons: ["Learning curve", "Build step required"],
+          link: "https://www.typescriptlang.org/",
+        },
+        {
+          id: 2,
+          name: "React",
+          ring: "adopt",
+          icon: "⚛️",
+          angle: 75,
+          description: "A JavaScript library for building user interfaces.",
+          pros: ["Large ecosystem", "Component-based", "Virtual DOM"],
+          cons: ["JSX learning curve", "Frequent updates"],
+          link: "https://reactjs.org/",
+        },
+        {
+          id: 3,
+          name: "Docker",
+          ring: "adopt",
+          icon: "🐳",
+          angle: 130,
+          description:
+            "Platform for developing, shipping, and running applications in containers.",
+          pros: ["Consistent environments", "Isolation", "Scalability"],
+          cons: ["Resource overhead", "Security concerns"],
+          link: "https://www.docker.com/",
+        },
+        {
+          id: 4,
+          name: "Go",
+          ring: "adopt",
+          icon: "🔵",
+          angle: 180,
+          description:
+            "A statically typed language designed for simplicity and efficiency.",
+          pros: ["Simple syntax", "Fast compilation", "Built-in concurrency"],
+          cons: ["No generics (until recently)", "Verbose error handling"],
+          link: "https://golang.org/",
+        },
+        {
+          id: 5,
+          name: "Vite",
+          ring: "adopt",
+          icon: "⚡",
+          angle: 230,
+          description: "Next generation frontend tooling.",
+          pros: ["Lightning fast HMR", "ES modules", "Plugin ecosystem"],
+          cons: ["Different from webpack", "Some plugin gaps"],
+          link: "https://vitejs.dev/",
+        },
+        {
+          id: 6,
+          name: "Next.js",
+          ring: "adopt",
+          icon: "▲",
+          angle: 280,
+          description: "The React Framework for Production.",
+          pros: ["SSR/SSG", "Great DX", "API routes"],
+          cons: ["Vercel lock-in concerns", "Complex configurations"],
+          link: "https://nextjs.org/",
+        },
+        {
+          id: 7,
+          name: "AWS",
+          ring: "adopt",
+          icon: "☁️",
+          angle: 330,
+          description: "Amazon Web Services cloud computing platform.",
+          pros: ["Comprehensive services", "Industry standard", "Scalable"],
+          cons: ["Complexity", "Cost management"],
+          link: "https://aws.amazon.com/",
+        },
+
+        // Trial Ring
+        {
+          id: 8,
+          name: "Rust",
+          ring: "trial",
+          icon: "🦀",
+          angle: 20,
+          description:
+            "A systems programming language focused on safety and performance.",
+          pros: ["Memory safety", "Zero-cost abstractions", "Great tooling"],
+          cons: ["Steep learning curve", "Longer compile times"],
+          link: "https://www.rust-lang.org/",
+        },
+        {
+          id: 9,
+          name: "Svelte",
+          ring: "trial",
+          icon: "🔥",
+          angle: 70,
+          description: "A radical new approach to building user interfaces.",
+          pros: ["No virtual DOM", "Less boilerplate", "Built-in animations"],
+          cons: ["Smaller ecosystem", "Less job market"],
+          link: "https://svelte.dev/",
+        },
+        {
+          id: 10,
+          name: "Bun",
+          ring: "trial",
+          icon: "🥟",
+          angle: 140,
+          description: "A fast all-in-one JavaScript runtime.",
+          pros: ["Extremely fast", "All-in-one toolkit", "Node compatible"],
+          cons: ["Young project", "Some compatibility issues"],
+          link: "https://bun.sh/",
+        },
+        {
+          id: 11,
+          name: "Cloudflare Workers",
+          ring: "trial",
+          icon: "🌐",
+          angle: 200,
+          description: "Serverless execution environment on Cloudflare's edge.",
+          pros: ["Global edge network", "Low latency", "Great pricing"],
+          cons: ["Runtime limitations", "V8 isolates only"],
+          link: "https://workers.cloudflare.com/",
+        },
+        {
+          id: 12,
+          name: "Tailwind",
+          ring: "trial",
+          icon: "🎨",
+          angle: 260,
+          description:
+            "A utility-first CSS framework for rapid UI development.",
+          pros: ["Fast development", "Consistent design", "Small bundle size"],
+          cons: ["Verbose HTML", "Learning curve"],
+          link: "https://tailwindcss.com/",
+        },
+        {
+          id: 13,
+          name: "tRPC",
+          ring: "trial",
+          icon: "🔗",
+          angle: 320,
+          description: "End-to-end typesafe APIs made easy.",
+          pros: ["Full type safety", "No code generation", "Great DX"],
+          cons: ["TypeScript only", "Coupled frontend/backend"],
+          link: "https://trpc.io/",
+        },
+
+        // Assess Ring
+        {
+          id: 14,
+          name: "Zig",
+          ring: "assess",
+          icon: "⚙️",
+          angle: 45,
+          description:
+            "A low-level programming language for system programming.",
+          pros: [
+            "No hidden control flow",
+            "C interop",
+            "Compile-time execution",
+          ],
+          cons: ["Young ecosystem", "Still evolving"],
+          link: "https://ziglang.org/",
+        },
+        {
+          id: 15,
+          name: "Astro",
+          ring: "assess",
+          icon: "🚀",
+          angle: 110,
+          description: "The all-in-one web framework designed for speed.",
+          pros: ["Island architecture", "Multi-framework", "Fast by default"],
+          cons: ["New ecosystem", "Limited SPA support"],
+          link: "https://astro.build/",
+        },
+        {
+          id: 16,
+          name: "Deno",
+          ring: "assess",
+          icon: "🦕",
+          angle: 180,
+          description: "A secure runtime for JavaScript and TypeScript.",
+          pros: ["TypeScript native", "Secure by default", "Modern APIs"],
+          cons: ["npm compatibility", "Smaller ecosystem"],
+          link: "https://deno.land/",
+        },
+        {
+          id: 17,
+          name: "Turborepo",
+          ring: "assess",
+          icon: "💨",
+          angle: 250,
+          description:
+            "High-performance build system for JavaScript/TypeScript monorepos.",
+          pros: ["Fast builds", "Remote caching", "Easy setup"],
+          cons: ["Vercel ecosystem", "Learning curve"],
+          link: "https://turbo.build/",
+        },
+        {
+          id: 18,
+          name: "HTMX",
+          ring: "assess",
+          icon: "📄",
+          angle: 320,
+          description:
+            "High power tools for HTML - access AJAX, WebSockets and more.",
+          pros: ["Simple approach", "No build step", "Progressive enhancement"],
+          cons: ["Different paradigm", "Limited for complex SPAs"],
+          link: "https://htmx.org/",
+        },
+
+        // Hold Ring
+        {
+          id: 19,
+          name: "jQuery",
+          ring: "hold",
+          icon: "📜",
+          angle: 60,
+          description: "A fast, small, and feature-rich JavaScript library.",
+          pros: ["Simple DOM manipulation", "Huge plugin ecosystem"],
+          cons: [
+            "Performance overhead",
+            "Outdated patterns",
+            "Not needed with modern JS",
+          ],
+          link: "https://jquery.com/",
+        },
+        {
+          id: 20,
+          name: "Angular.js",
+          ring: "hold",
+          icon: "🅰️",
+          angle: 150,
+          description: "The original Angular framework (version 1.x).",
+          pros: ["Still used in legacy apps"],
+          cons: ["Deprecated", "Performance issues", "Security concerns"],
+          link: "https://angularjs.org/",
+        },
+        {
+          id: 21,
+          name: "Webpack",
+          ring: "hold",
+          icon: "📦",
+          angle: 240,
+          description:
+            "A static module bundler for modern JavaScript applications.",
+          pros: ["Mature ecosystem", "Highly configurable"],
+          cons: [
+            "Complex configuration",
+            "Slow builds",
+            "Better alternatives exist",
+          ],
+          link: "https://webpack.js.org/",
+        },
+        {
+          id: 22,
+          name: "Heroku",
+          ring: "hold",
+          icon: "💜",
+          angle: 330,
+          description: "Cloud platform as a service.",
+          pros: ["Simple deployment", "Good for prototypes"],
+          cons: ["Expensive", "Free tier removed", "Limited control"],
+          link: "https://www.heroku.com/",
+        },
+      ];
+
+      // Ring distances from center (percentage of radius)
+      const ringDistances = {
+        adopt: 0.18,
+        trial: 0.38,
+        assess: 0.58,
+        hold: 0.82,
+      };
+
+      const radarSize = 600;
+      const centerX = radarSize / 2;
+      const centerY = radarSize / 2;
+      const maxRadius = radarSize / 2 - 30;
+
+      let activeBlip = null;
+      let blipElements = [];
+      let currentIndex = 0;
+      let autoRotateInterval = null;
+      let isAutoRotating = true;
+      let userInteractionTimeout = null;
+      const AUTO_ROTATE_DELAY = 3000; // 3 seconds between auto-selections
+      const RESUME_DELAY = 10000; // 10 seconds after user interaction to resume
+
+      // Calculate position for a technology
+      function calculatePosition(tech) {
+        const ringDist = ringDistances[tech.ring];
+        const angle = tech.angle * (Math.PI / 180);
+
+        // Add slight randomness for natural look
+        const jitter = (Math.random() - 0.5) * 15;
+        const radius = ringDist * maxRadius + jitter;
+
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
+        return { x, y };
+      }
+
+      // Render all blips
+      function renderBlips() {
+        const radar = document.getElementById("radar");
+
+        technologies.forEach((tech, index) => {
+          const pos = calculatePosition(tech);
+
+          const blip = document.createElement("div");
+          blip.className = "tech-blip";
+          blip.setAttribute("data-name", tech.name);
+          blip.setAttribute("data-index", index);
+          blip.style.left = `${pos.x - 18}px`;
+          blip.style.top = `${pos.y - 18}px`;
+          blip.innerHTML = tech.icon;
+
+          blip.addEventListener("click", () =>
+            handleUserInteraction(tech, blip, index)
+          );
+
+          radar.appendChild(blip);
+          blipElements.push(blip);
+        });
+      }
+
+      // Handle user interaction
+      function handleUserInteraction(tech, blipElement, index) {
+        // Update current index
+        currentIndex = index;
+
+        // Show the detail
+        showDetail(tech, blipElement);
+
+        // Pause auto-rotation
+        pauseAutoRotate();
+
+        // Clear any existing timeout
+        if (userInteractionTimeout) {
+          clearTimeout(userInteractionTimeout);
+        }
+
+        // Resume auto-rotation after delay
+        userInteractionTimeout = setTimeout(() => {
+          resumeAutoRotate();
+        }, RESUME_DELAY);
+      }
+
+      // Show detail panel
+      function showDetail(tech, blipElement) {
+        // Update active state
+        if (activeBlip) {
+          activeBlip.classList.remove("active");
+        }
+        activeBlip = blipElement;
+        blipElement.classList.add("active");
+
+        const panel = document.getElementById("detail-panel");
+
+        const prosHtml = tech.pros
+          .map(
+            (p) => `<li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>${p}</span>
+            </li>`
+          )
+          .join("");
+
+        const consHtml = tech.cons
+          .map(
+            (c) => `<li class="flex items-start gap-2">
+                <svg class="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                </svg>
+                <span>${c}</span>
+            </li>`
+          )
+          .join("");
+
+        const ringLabels = {
+          adopt: {
+            text: "Adopt",
+            class: "bg-green-500/20 text-green-400 border-green-500/50",
+          },
+          trial: {
+            text: "Trial",
+            class: "bg-blue-500/20 text-blue-400 border-blue-500/50",
+          },
+          assess: {
+            text: "Assess",
+            class: "bg-yellow-500/20 text-yellow-400 border-yellow-500/50",
+          },
+          hold: {
+            text: "Hold",
+            class: "bg-red-500/20 text-red-400 border-red-500/50",
+          },
+        };
+
+        const ringInfo = ringLabels[tech.ring];
+
+        panel.innerHTML = `
+                <div class="detail-panel">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-3xl">${tech.icon}</span>
+                                <h2 class="text-2xl font-bold text-white">${tech.name}</h2>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium capitalize border ${ringInfo.class}">
+                                ${ringInfo.text}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6 leading-relaxed">${tech.description}</p>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-green-400 font-semibold mb-2 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path>
+                            </svg>
+                            Pros
+                        </h3>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            ${prosHtml}
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="text-red-400 font-semibold mb-2 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            Cons
+                        </h3>
+                        <ul class="text-sm text-gray-300 space-y-2">
+                            ${consHtml}
+                        </ul>
+                    </div>
+                    
+                    <a href="${tech.link}" target="_blank" rel="noopener noreferrer" 
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-medium transition-colors">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                    </a>
+                </div>
+            `;
+      }
+
+      // Auto-rotate to next technology
+      function autoSelectNext() {
+        currentIndex = (currentIndex + 1) % technologies.length;
+        const tech = technologies[currentIndex];
+        const blip = blipElements[currentIndex];
+        showDetail(tech, blip);
+      }
+
+      // Start auto-rotation
+      function startAutoRotate() {
+        if (autoRotateInterval) {
+          clearInterval(autoRotateInterval);
+        }
+        autoRotateInterval = setInterval(autoSelectNext, AUTO_ROTATE_DELAY);
+      }
+
+      // Pause auto-rotation
+      function pauseAutoRotate() {
+        isAutoRotating = false;
+        if (autoRotateInterval) {
+          clearInterval(autoRotateInterval);
+          autoRotateInterval = null;
+        }
+        updateAutoIndicator();
+      }
+
+      // Resume auto-rotation
+      function resumeAutoRotate() {
+        isAutoRotating = true;
+        startAutoRotate();
+        updateAutoIndicator();
+      }
+
+      // Update the auto-rotate indicator UI
+      function updateAutoIndicator() {
+        const indicator = document.getElementById("auto-indicator");
+        const statusText = document.getElementById("auto-status");
+        const toggleBtn = document.getElementById("toggle-auto");
+        const pulseDot = document.getElementById("pulse-dot");
+
+        if (isAutoRotating) {
+          indicator.classList.remove("paused");
+          statusText.textContent = "Auto-rotating";
+          toggleBtn.textContent = "Pause";
+          pulseDot.classList.add("animate-ping");
+        } else {
+          indicator.classList.add("paused");
+          statusText.textContent = "Paused";
+          toggleBtn.textContent = "Resume";
+          pulseDot.classList.remove("animate-ping");
+        }
+      }
+
+      // Toggle auto-rotation manually
+      function toggleAutoRotate() {
+        if (userInteractionTimeout) {
+          clearTimeout(userInteractionTimeout);
+          userInteractionTimeout = null;
+        }
+
+        if (isAutoRotating) {
+          pauseAutoRotate();
+        } else {
+          resumeAutoRotate();
+        }
+      }
+
+      // Initialize
+      renderBlips();
+
+      // Start with first technology selected
+      showDetail(technologies[0], blipElements[0]);
+
+      // Start auto-rotation
+      startAutoRotate();
+
+      // Add toggle button listener
+      document
+        .getElementById("toggle-auto")
+        .addEventListener("click", toggleAutoRotate);
+    </script>
+  </body>
+</html>

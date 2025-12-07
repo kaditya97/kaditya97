@@ -1,79 +1,106 @@
-<section id="about" class="py-24 bg-slate-800/50">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="space-y-6">
-                    <h2 class="text-4xl font-bold">
-                        About <span class="gradient-text">Me</span>
-                    </h2>
-                    <div class="w-20 h-1 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded"></div>
-                    <p class="text-slate-300 text-lg leading-relaxed">
-                        As a <span class="text-cyan-400 font-semibold">Geomatics Engineer</span> with extensive experience in 
-                        <span class="text-emerald-400 font-semibold">software development</span>, I specialize in creating 
-                        innovative solutions that leverage the power of spatial data.
-                    </p>
-                    <p class="text-slate-400 leading-relaxed">
-                        My unique background combines deep expertise in Geographic Information Systems (GIS), 
-                        remote sensing technologies, and modern software engineering practices. I transform 
-                        complex geospatial data into actionable insights and user-friendly applications.
-                    </p>
-                    
-                    <div class="grid grid-cols-2 gap-6 pt-6">
-                        <div class="text-center p-6 bg-slate-800 rounded-xl border border-slate-700">
-                            <div class="text-4xl font-bold gradient-text">8+</div>
-                            <div class="text-slate-400 mt-2">Years Experience</div>
+<style>
+    #about {
+        background-image: url('/background.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+    
+    /* Optional: Add overlay for better text readability */
+    #about::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(15, 23, 42, 0.3); /* Much lighter overlay - adjust or remove */
+        z-index: 1;
+    }
+    
+    #about > * {
+        position: relative;
+        z-index: 2;
+    }
+</style>
+
+<section id="about" class="py-24">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="space-y-6">
+                <h2 class="text-4xl font-bold">
+                    About <span class="gradient-text">Me</span>
+                </h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded"></div>
+                <p class="text-slate-300 text-lg leading-relaxed">
+                    As a <span class="text-cyan-400 font-semibold">Geomatics Engineer</span> with extensive experience in 
+                    <span class="text-emerald-400 font-semibold">software development</span>, I specialize in creating 
+                    innovative solutions that leverage the power of spatial data.
+                </p>
+                <p class="text-slate-400 leading-relaxed">
+                    My unique background combines deep expertise in Geographic Information Systems (GIS), 
+                    remote sensing technologies, and modern software engineering practices. I transform 
+                    complex geospatial data into actionable insights and user-friendly applications.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-6 pt-6">
+                    <div class="text-center p-6 bg-slate-800 rounded-xl border border-slate-700">
+                        <div class="text-4xl font-bold gradient-text">8+</div>
+                        <div class="text-slate-400 mt-2">Years Experience</div>
+                    </div>
+                    <div class="text-center p-6 bg-slate-800 rounded-xl border border-slate-700">
+                        <div class="text-4xl font-bold gradient-text">50+</div>
+                        <div class="text-slate-400 mt-2">Projects Completed</div>
+                    </div>
+                    <div class="text-center p-6 bg-slate-800 rounded-xl border border-slate-700">
+                        <div class="text-4xl font-bold gradient-text">20+</div>
+                        <div class="text-slate-400 mt-2">Happy Clients</div>
+                    </div>
+                    <div class="text-center p-6 bg-slate-800 rounded-xl border border-slate-700">
+                        <div class="text-4xl font-bold gradient-text">15+</div>
+                        <div class="text-slate-400 mt-2">Technologies</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="p-6 bg-slate-800 rounded-xl border border-slate-700 card-hover">
+                    <div class="flex items-start space-x-4">
+                        <div class="p-3 bg-cyan-500/20 rounded-lg">
+                            <i class="fas fa-globe text-cyan-400 text-2xl"></i>
                         </div>
-                        <div class="text-center p-6 bg-slate-800 rounded-xl border border-slate-700">
-                            <div class="text-4xl font-bold gradient-text">50+</div>
-                            <div class="text-slate-400 mt-2">Projects Completed</div>
-                        </div>
-                        <div class="text-center p-6 bg-slate-800 rounded-xl border border-slate-700">
-                            <div class="text-4xl font-bold gradient-text">20+</div>
-                            <div class="text-slate-400 mt-2">Happy Clients</div>
-                        </div>
-                        <div class="text-center p-6 bg-slate-800 rounded-xl border border-slate-700">
-                            <div class="text-4xl font-bold gradient-text">15+</div>
-                            <div class="text-slate-400 mt-2">Technologies</div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">GIS Development</h3>
+                            <p class="text-slate-400">Building sophisticated mapping applications and spatial analysis tools using industry-leading GIS technologies.</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="space-y-6">
-                    <div class="p-6 bg-slate-800 rounded-xl border border-slate-700 card-hover">
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-cyan-500/20 rounded-lg">
-                                <i class="fas fa-globe text-cyan-400 text-2xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">GIS Development</h3>
-                                <p class="text-slate-400">Building sophisticated mapping applications and spatial analysis tools using industry-leading GIS technologies.</p>
-                            </div>
+                <div class="p-6 bg-slate-800 rounded-xl border border-slate-700 card-hover">
+                    <div class="flex items-start space-x-4">
+                        <div class="p-3 bg-emerald-500/20 rounded-lg">
+                            <i class="fas fa-satellite text-emerald-400 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Remote Sensing</h3>
+                            <p class="text-slate-400">Processing and analyzing satellite imagery for environmental monitoring, land use mapping, and change detection.</p>
                         </div>
                     </div>
-                    
-                    <div class="p-6 bg-slate-800 rounded-xl border border-slate-700 card-hover">
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-emerald-500/20 rounded-lg">
-                                <i class="fas fa-satellite text-emerald-400 text-2xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Remote Sensing</h3>
-                                <p class="text-slate-400">Processing and analyzing satellite imagery for environmental monitoring, land use mapping, and change detection.</p>
-                            </div>
+                </div>
+                
+                <div class="p-6 bg-slate-800 rounded-xl border border-slate-700 card-hover">
+                    <div class="flex items-start space-x-4">
+                        <div class="p-3 bg-blue-500/20 rounded-lg">
+                            <i class="fas fa-code text-blue-400 text-2xl"></i>
                         </div>
-                    </div>
-                    
-                    <div class="p-6 bg-slate-800 rounded-xl border border-slate-700 card-hover">
-                        <div class="flex items-start space-x-4">
-                            <div class="p-3 bg-blue-500/20 rounded-lg">
-                                <i class="fas fa-code text-blue-400 text-2xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Full-Stack Development</h3>
-                                <p class="text-slate-400">Creating scalable web applications with modern frameworks, APIs, and cloud infrastructure.</p>
-                            </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Full-Stack Development</h3>
+                            <p class="text-slate-400">Creating scalable web applications with modern frameworks, APIs, and cloud infrastructure.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
