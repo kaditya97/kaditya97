@@ -1,0 +1,80 @@
+<section id="home" class="min-h-screen gradient-bg grid-pattern relative overflow-hidden flex items-center">
+        <!-- Decorative Elements -->
+        <div class="absolute top-1/2 right-20 transform -translate-y-1/2 opacity-20 hidden lg:block">
+            <div class="satellite-path">
+                <div class="satellite-dot"></div>
+            </div>
+            <div class="satellite-path" style="width: 400px; height: 400px; animation-duration: 20s; animation-direction: reverse;">
+                <div class="satellite-dot" style="background: #34d399; box-shadow: 0 0 20px #34d399;"></div>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 py-32 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="inline-flex items-center px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
+                        <span class="w-2 h-2 bg-cyan-400 rounded-full mr-2 animate-pulse"></span>
+                        <span class="text-cyan-400 text-sm">Available for Projects</span>
+                    </div>
+                    
+                    <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
+                        <span class="text-white">Geomatics</span><br>
+                        <span class="gradient-text">Engineer</span><br>
+                        <span class="text-slate-400 text-4xl lg:text-5xl">& Senior Software Developer</span>
+                    </h1>
+                    
+                    <p class="text-xl text-slate-400 max-w-xl">
+                        Bridging the gap between <span class="text-cyan-400">Geographic Information Systems</span>, 
+                        <span class="text-emerald-400">Remote Sensing</span>, and 
+                        <span class="text-blue-400">Modern Software Development</span> to build innovative spatial solutions.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#projects" class="px-8 py-4 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-lg font-semibold hover:opacity-90 transition transform hover:scale-105">
+                            View My Work
+                        </a>
+                        <a href="#contact" class="px-8 py-4 border border-slate-600 rounded-lg font-semibold hover:border-cyan-500 hover:text-cyan-400 transition">
+                            Get In Touch
+                        </a>
+                    </div>
+                    
+                    <div class="flex items-center space-x-6 pt-4">
+                        <a href="https://www.github.com/kaditya97" class="text-slate-400 hover:text-cyan-400 text-2xl transition"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/kaditya97/" class="text-slate-400 hover:text-cyan-400 text-2xl transition"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://twitter.com/kaditya97" class="text-slate-400 hover:text-cyan-400 text-2xl transition"><i class="fab fa-twitter"></i></a>
+                        <a href="mailto:aditya.kushwaha@opengeohub.org" class="text-slate-400 hover:text-cyan-400 text-2xl transition"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <div class="relative hidden lg:flex justify-center items-center">
+                    <div class="float-animation">
+                        <svg viewBox="0 0 400 400" class="w-96 h-96">
+                            <!-- Globe -->
+                            <circle cx="200" cy="200" r="150" fill="none" stroke="url(#globeGradient)" stroke-width="2"/>
+                            <ellipse cx="200" cy="200" rx="150" ry="50" fill="none" stroke="rgba(34, 211, 238, 0.3)" stroke-width="1"/>
+                            <ellipse cx="200" cy="200" rx="100" ry="150" fill="none" stroke="rgba(34, 211, 238, 0.3)" stroke-width="1" transform="rotate(60 200 200)"/>
+                            <ellipse cx="200" cy="200" rx="100" ry="150" fill="none" stroke="rgba(34, 211, 238, 0.3)" stroke-width="1" transform="rotate(-60 200 200)"/>
+                            <!-- Grid lines -->
+                            <ellipse cx="200" cy="200" rx="150" ry="30" fill="none" stroke="rgba(52, 211, 153, 0.2)" stroke-width="1" transform="translate(0 -80)"/>
+                            <ellipse cx="200" cy="200" rx="150" ry="30" fill="none" stroke="rgba(52, 211, 153, 0.2)" stroke-width="1" transform="translate(0 80)"/>
+                            <!-- Location markers -->
+                            <circle cx="180" cy="120" r="6" fill="#22d3ee" class="animate-pulse"/>
+                            <circle cx="250" cy="180" r="6" fill="#34d399" class="animate-pulse" style="animation-delay: 0.5s"/>
+                            <circle cx="150" cy="220" r="6" fill="#60a5fa" class="animate-pulse" style="animation-delay: 1s"/>
+                            <defs>
+                                <linearGradient id="globeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#22d3ee"/>
+                                    <stop offset="100%" style="stop-color:#34d399"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-cyan-400 text-2xl"></i>
+        </div>
+    </section>

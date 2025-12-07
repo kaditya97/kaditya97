@@ -1,0 +1,185 @@
+---
+// src/layouts/Layout.astro
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{title}</title>
+		<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"
+		></script>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		/>
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+			* {
+				font-family: "Inter", sans-serif;
+			}
+
+			.gradient-bg {
+				background: linear-gradient(
+					135deg,
+					#0f172a 0%,
+					#1e3a5f 50%,
+					#0f4c3a 100%
+				);
+			}
+
+			.gradient-text {
+				background: linear-gradient(90deg, #22d3ee, #34d399);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
+
+			.globe-animation {
+				animation: rotate 20s linear infinite;
+			}
+
+			@keyframes rotate {
+				from {
+					transform: rotate(0deg);
+				}
+				to {
+					transform: rotate(360deg);
+				}
+			}
+
+			@keyframes float {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-20px);
+				}
+			}
+
+			.float-animation {
+				animation: float 6s ease-in-out infinite;
+			}
+
+			.card-hover {
+				transition: all 0.3s ease;
+			}
+
+			.card-hover:hover {
+				transform: translateY(-10px);
+				box-shadow: 0 25px 50px -12px rgba(34, 211, 238, 0.25);
+			}
+
+			.grid-pattern {
+				background-image: linear-gradient(
+						rgba(34, 211, 238, 0.03) 1px,
+						transparent 1px
+					),
+					linear-gradient(
+						90deg,
+						rgba(34, 211, 238, 0.03) 1px,
+						transparent 1px
+					);
+				background-size: 50px 50px;
+			}
+
+			.satellite-path {
+				position: absolute;
+				width: 300px;
+				height: 300px;
+				border: 1px dashed rgba(34, 211, 238, 0.2);
+				border-radius: 50%;
+				animation: rotate 15s linear infinite;
+			}
+
+			.satellite-dot {
+				position: absolute;
+				top: -5px;
+				left: 50%;
+				width: 10px;
+				height: 10px;
+				background: #22d3ee;
+				border-radius: 50%;
+				box-shadow: 0 0 20px #22d3ee;
+			}
+
+			html {
+				scroll-behavior: smooth;
+			}
+		</style>
+	</head>
+	<body class="bg-slate-900 text-white">
+		<slot />
+
+		<script>
+			// Mobile menu toggle
+			const menuBtn = document.getElementById("menuBtn");
+			const mobileMenu = document.getElementById("mobileMenu");
+
+			if (menuBtn && mobileMenu) {
+				menuBtn.addEventListener("click", () => {
+					mobileMenu.classList.toggle("hidden");
+				});
+
+				// Close mobile menu when clicking a link
+				document.querySelectorAll("#mobileMenu a").forEach((link) => {
+					link.addEventListener("click", () => {
+						mobileMenu.classList.add("hidden");
+					});
+				});
+			}
+
+			// Smooth reveal animation on scroll
+			const observerOptions = {
+				threshold: 0.1,
+				rootMargin: "0px 0px -50px 0px",
+			};
+
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.style.opacity = "1";
+						entry.target.style.transform = "translateY(0)";
+					}
+				});
+			}, observerOptions);
+
+			document.querySelectorAll("section > div").forEach((el) => {
+				el.style.opacity = "0";
+				el.style.transform = "translateY(30px)";
+				el.style.transition = "all 0.8s ease-out";
+				observer.observe(el);
+			});
+
+			// Form submission handler
+			const contactForm = document.getElementById("contactForm");
+			if (contactForm) {
+				contactForm.addEventListener("submit", (e) => {
+					e.preventDefault();
+					alert(
+						"Thank you for your message! I will get back to you soon.",
+					);
+				});
+			}
+
+			// Navbar background on scroll
+			window.addEventListener("scroll", () => {
+				const nav = document.querySelector("nav");
+				if (nav) {
+					if (window.scrollY > 100) {
+						nav.classList.add("shadow-lg");
+					} else {
+						nav.classList.remove("shadow-lg");
+					}
+				}
+			});
+		</script>
+	</body>
+</html>
