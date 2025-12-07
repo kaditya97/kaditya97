@@ -2,6 +2,7 @@
   "name": "pink-proxima",
   "type": "module",
   "version": "0.0.1",
+  "license": "UNLICENSED",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -9,6 +10,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.16.4"
+    "astro": "^5.16.4",
+    "three": "^0.181.2"
+  },
+  "devDependencies": {
+    "@types/three": "^0.181.0"
   }
 }
